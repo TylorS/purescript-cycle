@@ -1,0 +1,30 @@
+{
+  "name": "purescript-cycle",
+  "version": "0.0.0",
+  "description": "This is a quickly done port of [Cycle.js](http://cycle.js.org) to purescript built on top of my experimental stream library [Almost](https://gitub.com/Tylors/Almost)",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "commit": "git-cz",
+    "changelog": "conventional-changelog --infile CHANGELOG.md --same-file --release-count 0 --preset angular",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "config": {
+   "commitizen": {
+     "path": "./node_modules/cz-conventional-changelog"
+   },
+   "ghooks": {
+     "commit-msg": "node ./node_modules/validate-commit-msg/index.js"
+   }
+  },
+  "author": "Tylor Steinberger <tlsteinberger167@gmail.com> (github.com/TylorS)",
+  "license": "MIT",
+  "devDependencies": {
+    "commitizen": "^2.8.1",
+    "conventional-changelog": "^1.1.0",
+    "conventional-changelog-cli": "^1.2.0",
+    "validate-commit-msg": "^2.6.1"
+  }
+}
