@@ -1,6 +1,7 @@
 module Cycle (run) where
 
 import Almost (Stream, Promise, Subject, observe, holdSubject, next, complete, thenp)
+import Control.Monad.Eff (Pure)
 import Data.StrMap (fromFoldable, StrMap, keys)
 import Data.StrMap.Unsafe (unsafeIndex)
 import Data.Tuple (Tuple(..))
@@ -35,9 +36,11 @@ callDrivers drivers sinkProxies =
     callDriver' :: String -> b
     callDriver' = callDriver drivers sinkProxies
 
-replicateOne :: forall a. Sinks a -> SinkProxies a -> String -> Promise (Subject a)
+replicateOne :: forall a. Sinks a -> SinkProxies a -> String -> Promise (Pure (Subject a))
 replicateOne sinks proxies name =
-  thenp (\x -> complete x subject) ( observe (\x -> next x subject) stream )
+  thenp
+    (\x -> complete x subject)
+    (observe (\x -> next x subject) stream)
   where
     subject :: Subject a
     subject = unsafeIndex proxies name
@@ -45,20 +48,20 @@ replicateOne sinks proxies name =
     stream :: Stream a
     stream = unsafeIndex sinks name
 
-replicateMany :: forall a. Sinks a -> SinkProxies a -> Subscriptions (Promise (Subject a))
+replicateMany :: forall a. Sinks a -> SinkProxies a -> Subscriptions (Promise (Pure (Subject a)))
 replicateMany sinks proxies =
   fromFoldable $ map (\name -> (Tuple name (replicateOne' name))) names
   where
     names :: Array String
     names = keys proxies
 
-    replicateOne' :: String -> Promise (Subject a)
+    replicateOne' :: String -> Promise (Pure (Subject a))
     replicateOne' = replicateOne sinks proxies
 
 run :: forall a b.
   (Sources b -> Sinks a) ->
   Drivers a b ->
-  Subscriptions (Promise (Subject a))
+  Subscriptions (Promise (Pure (Subject a)))
 run main drivers = replicateMany (main sources) sinkProxies
   where
     sinkProxies :: SinkProxies a
