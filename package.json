@@ -1,6 +1,6 @@
 {
   "name": "purescript-cycle",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "This is a quickly done port of [Cycle.js](http://cycle.js.org) to purescript built on top of my experimental stream library [Almost](https://gitub.com/Tylors/Almost)",
   "main": "index.js",
   "directories": {
